@@ -79,7 +79,7 @@ namespace AudioPlayer
                         }
                 }
             }
-            //player.Playing() //-- playing ptivate
+            //player.Playing = true; //-- playing ptivate
             ReadLine();
         }
     }
