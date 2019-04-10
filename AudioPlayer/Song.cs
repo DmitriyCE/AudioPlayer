@@ -15,6 +15,7 @@ namespace AudioPlayer
         string Genre;
 
         public Artist Artist;
-        Album Album;
+        Album[] Album;
+        Playlist[] Playlist;
     }
 }

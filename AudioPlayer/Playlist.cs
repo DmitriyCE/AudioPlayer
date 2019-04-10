@@ -8,7 +8,9 @@ namespace AudioPlayer
 {
     class Playlist
     {
-        Song[] Songs;
+        string Path;
+        string Title;
+        public Song[] Songs;
 
     }
 }

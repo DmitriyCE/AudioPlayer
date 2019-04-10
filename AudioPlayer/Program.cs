@@ -35,19 +35,52 @@ namespace AudioPlayer
                     case "Up":
                         {
                             player.VolumeUp();
-                        }break;
+                        }
+                        break;
 
                     case "Down":
                         {
                             player.VolumeDown();
-                        }break;
+                        }
+                        break;
 
                     case "P":
                         {
                             player.Play();
-                        }break;
+                            break;
+                        }
+                    case "Stop":
+                        {
+                            player.Stop();
+                            break;
+                        }
+                    case "Start":
+                        {
+                            player.Start();
+                            break;
+                        }
+
+                    case "L":
+                        {
+                            player.Lock();
+                            break;
+                        }
+                    case "UnL":
+                        {
+                            player.UnLock();
+                            break;
+                        }
+                    case "VolChang":
+                        {
+                            WriteLine("Введите значение громкости");
+                            int step = Convert.ToInt32(ReadLine());
+                            player.VolumeChange(step);
+                            break;
+                        }
                 }
             }
+            //player.Playing() //-- playing ptivate
+            ReadLine();
         }
     }
 }

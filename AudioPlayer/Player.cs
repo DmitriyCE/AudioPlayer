@@ -8,7 +8,7 @@ namespace AudioPlayer
 {
     class Player
     {
-        private const int _maxVolume = 100;
+        private const int _maxVolume = 300;
         private int _volume;
         public int Volume
         {
@@ -32,7 +32,16 @@ namespace AudioPlayer
                 }
             }
         }
-        bool IsLock;
+        bool Locked;
+        private bool _playing;
+        public bool Playing
+        {
+            get { return _playing; }
+            private set
+            {
+                _playing = value;
+            }
+        }
         public Song[] Songs;
 
         public void Play()
@@ -54,6 +63,39 @@ namespace AudioPlayer
         {
             Volume -= 5;
             Console.WriteLine("Volume is: " + Volume);
+        }
+        public void VolumeChange(int step)
+        {
+            Volume = step;
+            Console.WriteLine("Volume is: " + Volume);
+        }
+        public void Lock()
+        {
+            Locked = true;
+            Console.WriteLine("Плеер заблокирован");
+        }
+        public void UnLock()
+        {
+            Locked = false;
+            Console.WriteLine("Плеер разблокирован");
+        }
+        public bool Stop()
+        {
+            if (Locked == false)
+            {
+                Playing = false;
+                Console.WriteLine("Плеер остановлен");
+            }
+            return Playing;
+        }
+        public bool Start()
+        {
+            if(Locked == false)
+            {
+                Playing = true;
+                Console.WriteLine("Плеер запущен");
+            }
+            return Playing;
         }
     }
 }

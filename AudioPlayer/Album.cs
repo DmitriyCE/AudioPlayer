@@ -8,5 +8,10 @@ namespace AudioPlayer
 {
     class Album
     {
+        public Song Song;
+        string Name;
+        string Path;
+        int Year;
+        
     }
 }
