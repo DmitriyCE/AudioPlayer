@@ -49,7 +49,7 @@ namespace AudioPlayer
             for (int i = 0; i < Songs.Length; i++)
             {
                 Console.WriteLine(Songs[i].Title);
-                System.Threading.Thread.Sleep(2000);
+                System.Threading.Thread.Sleep(3000);
             }
         }
 
