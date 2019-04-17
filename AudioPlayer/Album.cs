@@ -9,9 +9,17 @@ namespace AudioPlayer
     class Album
     {
         public Song Song;
-        string Name;
+        public string Name;
         string Path;
-        int Year;
-        
+        public int Year;
+
+        public Album()
+        {
+            this.Name = "Unknown Album";
+        }
+        public Album(string Name)
+        {
+
+        }
     }
 }

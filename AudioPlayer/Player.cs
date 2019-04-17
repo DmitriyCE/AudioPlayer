@@ -97,5 +97,8 @@ namespace AudioPlayer
             }
             return Playing;
         }
+        public void Add(params Song[] songs)
+        {
+        }
     }
 }
