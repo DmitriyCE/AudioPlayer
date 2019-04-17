@@ -80,13 +80,17 @@ namespace AudioPlayer
             for (int i = 0; i < songs.Length; i++)
             {
                 var song1 = new Song();
-                song1.Title = "Song" + 1;
+                song1.Title = "Song" + (i+1);
                 song1.Duration = rand.Next(501);
                 song1.Artist = new Artist();
                 songs[i] = song1;
+                if (i == 0)
+                {
+                    MinDuration = song1.Duration;
+                }
                 TotalDuration += song1.Duration;
                 MinDuration = song1.Duration < MinDuration? song1.Duration : MinDuration;
-                MaxDuration = song1.Duration < MaxDuration? song1.Duration : MaxDuration;
+                MaxDuration = song1.Duration > MaxDuration? song1.Duration : MaxDuration; 
             }
             total = TotalDuration;
             min = MinDuration;
