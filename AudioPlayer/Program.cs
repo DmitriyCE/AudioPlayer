@@ -11,7 +11,9 @@ namespace AudioPlayer
     {
         static void Main(string[] args)
         {
-            int min, max, total;
+            int min;
+            int max;
+            int total=0;
             var player = new Player();
             var songs = CreateSongs(out min, out max, ref total);
             player.Songs = songs;
@@ -72,7 +74,9 @@ namespace AudioPlayer
         {
             Random rand = new Random();
             Song[] songs = new Song[5];
-            int MinDuration, MaxDuration, TotalDuration = 0;
+            int MinDuration = 0;
+            int MaxDuration = 0;
+            int TotalDuration = 0;
             for (int i = 0; i < songs.Length; i++)
             {
                 var song1 = new Song();
@@ -81,9 +85,8 @@ namespace AudioPlayer
                 song1.Artist = new Artist();
                 songs[i] = song1;
                 TotalDuration += song1.Duration;
-
-                MinDuration = song1.Duration < MinDuration ? song1.Duration : MinDuration;
-                MaxDuration = song1.Duration < MaxDuration ? song1.Duration : MaxDuration;
+                MinDuration = song1.Duration < MinDuration? song1.Duration : MinDuration;
+                MaxDuration = song1.Duration < MaxDuration? song1.Duration : MaxDuration;
             }
             total = TotalDuration;
             min = MinDuration;
