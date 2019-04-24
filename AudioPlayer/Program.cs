@@ -13,29 +13,20 @@ namespace AudioPlayer
         {
             int min;
             int max;
-            int total=0;
+            int total = 0;
             var player = new Player();
-            CreateDefaultSong();
-            CreateDefaultSong("name");
-            CreateDefaultSong("name", 300, "path", "lyries", "genre");
-            player.Add(CreateDefaultSong());
-            player.Add(CreateDefaultSong("name1"), CreateDefaultSong("name2"));
-            Song[] songs = new Song[8];
-            for (int i = 0; i < songs.Length; i++)
+
+            List<Song> songs = new List<Song>();
+            for (int i = 0; i < 8; i++)
             {
-                var song=CreateDefaultSong("name" + (i + 1));
-                songs[i] = song;
+                var song = CreateDefaultSong("song " + (i + 1));
+                songs.Add(song);
             }
+
             player.Add(songs);
-            AddArtist();
-            AddArtist("name artist");
-            AddAlbum();
-            AddAlbum(2003, "name album");
-            AddAlbum(name:"name album",year:2009);
-            //var songs = CreateSongs(out min, out max, ref total);
-            //player.Songs = songs;
-            // WriteLine($"Total duration: {total}, max duration: {max}, min duration{min}");
-            //player.Add(songs[1],songs[2]);
+            player.SortByTitle(songs);
+            player.Shuffle(songs);
+
             while (true)
             {
                 switch (ReadLine())
@@ -54,7 +45,7 @@ namespace AudioPlayer
 
                     case "P":
                         {
-                            player.Play();
+                            player.Play(true);
                             break;
                         }
                     case "Stop":
@@ -88,6 +79,7 @@ namespace AudioPlayer
                 }
             }
         }
+
         private static Song[] CreateSongs(out int min, out int max, ref int total)
         {
             Random rand = new Random();
@@ -126,6 +118,7 @@ namespace AudioPlayer
             song.Genre = "genre";
             return song;
         }
+
         public static Song CreateDefaultSong(string Name)
         {
             var song = new Song();
@@ -137,6 +130,7 @@ namespace AudioPlayer
             //song.Genre = "genre";
             return song;
         }
+
         public static Song CreateDefaultSong(string name, int duration, string path,string lyries, string genre)
         {
             var song = new Song();
@@ -147,6 +141,7 @@ namespace AudioPlayer
             song.Genre = genre;
             return song;
         }
+
         public static Artist AddArtist(string name= "Unknown Artist")
         {
             var artist = new Artist();
@@ -154,6 +149,7 @@ namespace AudioPlayer
             WriteLine(artist.Name);
             return artist;
         }
+
         public static Album AddAlbum(int year=0, string name = "Unknown Album")
         {
             var album = new Album();

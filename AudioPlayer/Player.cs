@@ -32,8 +32,10 @@ namespace AudioPlayer
                 }
             }
         }
+
         bool Locked;
         private bool _playing;
+
         public bool Playing
         {
             get { return _playing; }
@@ -42,14 +44,16 @@ namespace AudioPlayer
                 _playing = value;
             }
         }
-        public Song[] Songs;
 
-        public void Play()
+        List<Song> songs = new List<Song>();
+        public void Play(bool loop =false)
         {
-            for (int i = 0; i < Songs.Length; i++)
+            int repeat;
+            repeat = loop == false ? 1 : 5;
+            for (int i = 0; i < repeat; i++)
             {
-                Console.WriteLine(Songs[i].Title);
-                System.Threading.Thread.Sleep(3000);
+                Console.WriteLine(songs[i].Title);
+                System.Threading.Thread.Sleep(2000);
             }
         }
 
@@ -64,21 +68,25 @@ namespace AudioPlayer
             Volume -= 5;
             Console.WriteLine("Volume is: " + Volume);
         }
+
         public void VolumeChange(int step)
         {
             Volume = step;
             Console.WriteLine("Volume is: " + Volume);
         }
+
         public void Lock()
         {
             Locked = true;
             Console.WriteLine("Плеер заблокирован");
         }
+
         public void UnLock()
         {
             Locked = false;
             Console.WriteLine("Плеер разблокирован");
         }
+
         public bool Stop()
         {
             if (Locked == false)
@@ -88,6 +96,7 @@ namespace AudioPlayer
             }
             return Playing;
         }
+
         public bool Start()
         {
             if(Locked == false)
@@ -97,8 +106,61 @@ namespace AudioPlayer
             }
             return Playing;
         }
-        public void Add(params Song[] songs)
+
+        public void Add(List<Song> songs)
         {
+            this.songs = songs;
+        }
+
+        public void Shuffle(List<Song> songs)
+        {
+            List<Song> songsNew =new List<Song>();
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = i; j < songs.Count; j+=3)
+                {
+                    songsNew.Add(songs[j]);
+                }
+            }
+            this.songs = songsNew;
+        }
+
+        public void SortByTitle (List<Song> songs)
+        {
+            var songsTitle = new List<string>();
+            foreach (Song sng in songs)
+            {
+                string title = sng.Title;
+                songsTitle.Add(title);
+            }
+            songsTitle.Sort();
+            var sortedSongs = new List<Song>();
+            for (int i = 0; i < songsTitle.Count; i++)
+            {
+                foreach(Song sng in songs)
+                {
+                    if (songsTitle[i]==sng.Title)
+                    {
+                        sortedSongs.Add(sng);
+                    }
+                }
+            }
+            this.songs = sortedSongs;
+        }
+
+        public void WriteLyrics(Song song)
+        {
+            song.Title = song.Title.Length > 13 ? song.Title.Remove(13)+" ..." : song.Title;
+            Console.WriteLine(song.Title);
+            if (song.Lyries!= null)
+            {
+                string[] massStringLyrics = song.Lyries.Split(';');
+                for (int i = 0; i < massStringLyrics.Length; i++)
+                {
+                    Console.WriteLine(massStringLyrics[i]);
+                }
+            }
+            
         }
     }
 }
