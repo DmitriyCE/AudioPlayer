@@ -49,10 +49,18 @@ namespace AudioPlayer
         public void Play(bool loop =false)
         {
             int repeat;
-            repeat = loop == false ? 1 : 5;
+            repeat = loop == false ? 1 : songs.Count;
             for (int i = 0; i < repeat; i++)
             {
-                Console.WriteLine(songs[i].Title);
+                if (songs[i].like == true)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                }
+                else if (songs[i].like == false)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+                Console.WriteLine(songs[i].Title + " Genre-" + songs[i].Genre);
                 System.Threading.Thread.Sleep(2000);
             }
         }
@@ -161,6 +169,19 @@ namespace AudioPlayer
                 }
             }
             
+        }
+        public void FilterByGenre(List<Song> songs, Song.Genres fiterGenre)
+        {
+            var filterSongs = new List<Song>();
+            for (int i = 0; i < songs.Count; i++)
+            {
+                Song.Genres genreSong = songs[i].Genre;
+                if (fiterGenre == genreSong)
+                {
+                    filterSongs.Add(songs[i]);
+                }
+            }
+            this.songs = filterSongs;
         }
     }
 }

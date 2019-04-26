@@ -8,11 +8,31 @@ namespace AudioPlayer
 {
     class Song
     {
+        public enum Genres
+        {
+            None = 0,
+            Rock = 1,       
+            Pop= 2,
+            Metall = 3,
+            Post_Hardcore = 4     
+        }
+
         public int Duration;
         public string Title;
         public string Path;
         public string Lyries;
-        public string Genre;
+        public Genres Genre;
+        public bool? like = null;
+
+        public void Like()
+        {
+            like = true;
+        }
+
+        public void Dislike()
+        {
+            like = false;
+        }
 
         public Artist Artist;
         Album[] Album;

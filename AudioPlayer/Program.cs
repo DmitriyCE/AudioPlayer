@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,17 +16,38 @@ namespace AudioPlayer
             int max;
             int total = 0;
             var player = new Player();
+            Random rand = new Random();
 
             List<Song> songs = new List<Song>();
-            for (int i = 0; i < 8; i++)
+            for (int i = 1; i < 8; i++)
             {
-                var song = CreateDefaultSong("song " + (i + 1));
+                Song.Genres genre = Song.Genres.None;
+                if (i == 1)
+                {
+                    genre = Song.Genres.Rock;
+                }
+                else if (i == 2)
+                {
+                    genre = Song.Genres.Pop;
+                }
+                else if (i == 3)
+                {
+                    genre = Song.Genres.Metall;
+                }
+                else if (i == 4)
+                {
+                    genre = Song.Genres.Post_Hardcore;
+                }
+                var song = CreateDefaultSong($"song {i}", 10+i*2, genre);
+                
                 songs.Add(song);
+               
             }
-
             player.Add(songs);
-            player.SortByTitle(songs);
-            player.Shuffle(songs);
+            player.FilterByGenre(songs, Song.Genres.Post_Hardcore);
+
+            //player.SortByTitle(songs);
+            //player.Shuffle(songs);
 
             while (true)
             {
@@ -108,6 +130,8 @@ namespace AudioPlayer
             return songs;
         }
 
+
+
         public static Song CreateDefaultSong()
         {
             var song = new Song();
@@ -115,29 +139,30 @@ namespace AudioPlayer
             song.Title = "song";
             song.Path = "path";
             song.Lyries = "lyries";
-            song.Genre = "genre";
+            song.Genre = Song.Genres.Metall;
             return song;
         }
 
-        public static Song CreateDefaultSong(string Name)
+        public static Song CreateDefaultSong(string Name, bool like)
         {
+            Random rand = new Random();
             var song = new Song();
-            CreateDefaultSong();
+            //CreateDefaultSong();
             song.Title = Name;
-            //song.Duration = 300;
-            //song.Path = "path";
-            //song.Lyries = "lyries";
-            //song.Genre = "genre";
+            song.Artist = new Artist();
+            song.like = like;
+            song.Duration = rand.Next(500);
+            song.Genre = Song.Genres.Metall;
             return song;
         }
 
-        public static Song CreateDefaultSong(string name, int duration, string path,string lyries, string genre)
+        public static Song CreateDefaultSong(string name, int duration, Song.Genres genre)
         {
             var song = new Song();
             song.Title = name;
             song.Duration = duration;
-            song.Path = path;
-            song.Lyries = lyries;
+            song.Path = "path";
+            song.Lyries = "lyries";
             song.Genre = genre;
             return song;
         }
