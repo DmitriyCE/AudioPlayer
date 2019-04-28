@@ -33,7 +33,7 @@ namespace AudioPlayer
             }
         }
 
-        bool Locked;
+        private bool Locked;
         private bool _playing;
 
         public bool Playing
@@ -45,7 +45,7 @@ namespace AudioPlayer
             }
         }
 
-        List<Song> songs = new List<Song>();
+        private List<Song> songs = new List<Song>();
         public void Play(bool loop =false)
         {
             int repeat;
@@ -120,42 +120,6 @@ namespace AudioPlayer
             this.songs = songs;
         }
 
-        public void Shuffle(List<Song> songs)
-        {
-            List<Song> songsNew =new List<Song>();
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = i; j < songs.Count; j+=3)
-                {
-                    songsNew.Add(songs[j]);
-                }
-            }
-            this.songs = songsNew;
-        }
-
-        public void SortByTitle (List<Song> songs)
-        {
-            var songsTitle = new List<string>();
-            foreach (Song sng in songs)
-            {
-                string title = sng.Title;
-                songsTitle.Add(title);
-            }
-            songsTitle.Sort();
-            var sortedSongs = new List<Song>();
-            for (int i = 0; i < songsTitle.Count; i++)
-            {
-                foreach(Song sng in songs)
-                {
-                    if (songsTitle[i]==sng.Title)
-                    {
-                        sortedSongs.Add(sng);
-                    }
-                }
-            }
-            this.songs = sortedSongs;
-        }
-
         public void WriteLyrics(Song song)
         {
             song.Title = song.Title.Length > 13 ? song.Title.Remove(13)+" ..." : song.Title;
@@ -170,6 +134,7 @@ namespace AudioPlayer
             }
             
         }
+
         public void FilterByGenre(List<Song> songs, Song.Genres fiterGenre)
         {
             var filterSongs = new List<Song>();
@@ -184,4 +149,49 @@ namespace AudioPlayer
             this.songs = filterSongs;
         }
     }
+    static class MetodsSongs
+    {
+        public static List<Song> Shuffle(this List<Song> songs)
+        {
+            List<Song> songsNew = new List<Song>();
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = i; j < songs.Count; j += 3)
+                {
+                    songsNew.Add(songs[j]);
+                }
+            }
+            return songs = songsNew;
+        }
+
+        public static List<Song> SortByTitle(this List<Song> songs)
+        {
+            var songsTitle = new List<string>();
+            foreach (Song sng in songs)
+            {
+                string title = sng.Title;
+                songsTitle.Add(title);
+            }
+            songsTitle.Sort();
+            var sortedSongs = new List<Song>();
+            for (int i = 0; i < songsTitle.Count; i++)
+            {
+                foreach (Song sng in songs)
+                {
+                    if (songsTitle[i] == sng.Title)
+                    {
+                        sortedSongs.Add(sng);
+                    }
+                }
+            }
+            return songs = sortedSongs;
+        }
+
+        public static string TrimString(this string str)
+        {
+            str = str.Length > 13 ? str.Remove(13) + " ..." : str;
+            return str;
+        }
+    }
+
 }

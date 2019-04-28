@@ -10,7 +10,7 @@ namespace AudioPlayer
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             int min;
             int max;
@@ -21,33 +21,13 @@ namespace AudioPlayer
             List<Song> songs = new List<Song>();
             for (int i = 1; i < 8; i++)
             {
-                Song.Genres genre = Song.Genres.None;
-                if (i == 1)
-                {
-                    genre = Song.Genres.Rock;
-                }
-                else if (i == 2)
-                {
-                    genre = Song.Genres.Pop;
-                }
-                else if (i == 3)
-                {
-                    genre = Song.Genres.Metall;
-                }
-                else if (i == 4)
-                {
-                    genre = Song.Genres.Post_Hardcore;
-                }
-                var song = CreateDefaultSong($"song {i}", 10+i*2, genre);
-                
+                var song = CreateDefaultSong($"song {i}", 10+i*2, (Song.Genres)rand.Next(1,5));
                 songs.Add(song);
                
             }
-            player.Add(songs);
-            player.FilterByGenre(songs, Song.Genres.Post_Hardcore);
-
-            //player.SortByTitle(songs);
-            //player.Shuffle(songs);
+            player.Add(songs.Shuffle());
+            player.Add(songs.SortByTitle());
+            //player.FilterByGenre(songs, Song.Genres.Post_Hardcore);
 
             while (true)
             {
@@ -159,7 +139,7 @@ namespace AudioPlayer
         public static Song CreateDefaultSong(string name, int duration, Song.Genres genre)
         {
             var song = new Song();
-            song.Title = name;
+            song.Title = name.TrimString();
             song.Duration = duration;
             song.Path = "path";
             song.Lyries = "lyries";
@@ -185,5 +165,6 @@ namespace AudioPlayer
         }
 
     }
+
 }
 

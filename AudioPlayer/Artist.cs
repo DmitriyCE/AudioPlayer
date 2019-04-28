@@ -11,8 +11,8 @@ namespace AudioPlayer
         public Band[] Bands;
         public Song Song;
         public string Name;
-        string Nickname;
-        string Country;
+        private string Nickname;
+        private string Country;
         
         public Artist()
         {

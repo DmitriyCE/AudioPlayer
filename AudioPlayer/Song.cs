@@ -35,7 +35,7 @@ namespace AudioPlayer
         }
 
         public Artist Artist;
-        Album[] Album;
-        Playlist[] Playlist;
+        private Album[] Album;
+        private Playlist[] Playlist;
     }
 }

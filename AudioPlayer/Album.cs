@@ -10,7 +10,7 @@ namespace AudioPlayer
     {
         public Song Song;
         public string Name;
-        string Path;
+        private string Path;
         public int Year;
 
         public Album()
