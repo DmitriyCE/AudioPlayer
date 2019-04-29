@@ -135,6 +135,16 @@ namespace AudioPlayer
             
         }
 
+        public static void GetSongData(Song song, ConsoleColor color)
+        {
+            var (title, minutes, seconds, artistName, album, year) = song;
+            Console.WriteLine($"Title - {title.TrimString()}");
+            Console.WriteLine($"Duration - {minutes}.{seconds}");
+            Console.WriteLine($"Artist - {artistName}");
+            Console.WriteLine($"Album - {album}");
+            Console.WriteLine($"Year - {year}");
+        }
+
         public void FilterByGenre(List<Song> songs, Song.Genres fiterGenre)
         {
             var filterSongs = new List<Song>();
