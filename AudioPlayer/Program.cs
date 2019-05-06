@@ -15,7 +15,8 @@ namespace AudioPlayer
             int min;
             int max;
             int total = 0;
-            var player = new Player();
+            Skin skin = new RandomSkin();
+            var player = new Player(skin);
             Random rand = new Random();
 
             List<Song> songs = new List<Song>();

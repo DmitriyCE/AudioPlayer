@@ -45,6 +45,11 @@ namespace AudioPlayer
             }
         }
 
+        public Skin skin;
+        public Player(Skin skin )
+        {
+            this.skin = skin;
+        }
         private List<Song> songs = new List<Song>();
         public void Play(bool loop =false)
         {
@@ -60,7 +65,9 @@ namespace AudioPlayer
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                 }
-                Console.WriteLine(songs[i].Title + " Genre-" + songs[i].Genre);
+                //Console.WriteLine(songs[i].Title + " Genre-" + songs[i].Genre);
+                skin.Clear();
+                skin.Render(songs[i].Title + " Genre-" + songs[i].Genre);
                 System.Threading.Thread.Sleep(2000);
             }
         }
@@ -123,26 +130,33 @@ namespace AudioPlayer
         public void WriteLyrics(Song song)
         {
             song.Title = song.Title.Length > 13 ? song.Title.Remove(13)+" ..." : song.Title;
-            Console.WriteLine(song.Title);
+            //Console.WriteLine(song.Title);
+            skin.Render(song.Title);
             if (song.Lyries!= null)
             {
                 string[] massStringLyrics = song.Lyries.Split(';');
                 for (int i = 0; i < massStringLyrics.Length; i++)
                 {
-                    Console.WriteLine(massStringLyrics[i]);
+                    //Console.WriteLine(massStringLyrics[i]);
+                    skin.Render(massStringLyrics[i]);
                 }
             }
             
         }
 
-        public static void GetSongData(Song song, ConsoleColor color)
+        public void GetSongData(Song song, ConsoleColor color)
         {
             var (title, minutes, seconds, artistName, album, year) = song;
-            Console.WriteLine($"Title - {title.TrimString()}");
-            Console.WriteLine($"Duration - {minutes}.{seconds}");
-            Console.WriteLine($"Artist - {artistName}");
-            Console.WriteLine($"Album - {album}");
-            Console.WriteLine($"Year - {year}");
+            //Console.WriteLine($"Title - {title.TrimString()}");
+            //Console.WriteLine($"Duration - {minutes}.{seconds}");
+            //Console.WriteLine($"Artist - {artistName}");
+            //Console.WriteLine($"Album - {album}");
+            //Console.WriteLine($"Year - {year}");
+            skin.Render($"Title - {title.TrimString()}");
+            skin.Render($"Duration - {minutes}.{seconds}");
+            skin.Render($"Artist - {artistName}");
+            skin.Render($"Album - {album}");
+            skin.Render($"Year - {year}");
         }
 
         public void FilterByGenre(List<Song> songs, Song.Genres fiterGenre)
@@ -203,5 +217,56 @@ namespace AudioPlayer
             return str;
         }
     }
+    abstract class Skin
+    {
+      public abstract void Clear();
+      public abstract void Render(string text);
+    }
+    class ClassicSkin: Skin
+    {
+        public override void Clear()
+        {
+            Console.Clear();
+        }
+        public override void Render(string text)
+        {
+            Console.WriteLine(text);
+        }
+    }
+    class ColorSkin:Skin
+    {
+        public ConsoleColor colorText;
+        public ColorSkin(ConsoleColor color)
+        {
+            this.colorText = color;
+        }
+        public override void Clear()
+        {
+            Console.Clear();
+        }
+        public override void Render(string text)
+        {
+            Console.ForegroundColor = colorText;
+            Console.WriteLine(text);
+        }
+    }
+    class RandomSkin:Skin
+    {
+        public override void Clear()
+        {
+            Console.Clear();
+            for (int i = 0; i < 30; i++)
+            {
+                Console.Write((char)058D);
+            }
+            Console.WriteLine();
+        }
+        public override void Render(string text)
+        {
+            Random rand = new Random();
+            Console.ForegroundColor =(ConsoleColor)rand.Next(0, 15);
+            Console.WriteLine(text);
 
+        }
+    }
 }
