@@ -49,9 +49,20 @@
     <Compile Include="Artist.cs" />
     <Compile Include="Album.cs" />
     <Compile Include="Band.cs" />
+    <Compile Include="AudioPlayer.cs" />
+    <Compile Include="Sorted.cs" />
+    <Compile Include="ShuffleSong.cs" />
+    <Compile Include="RandomSkin.cs" />
+    <Compile Include="ColorSkin.cs" />
+    <Compile Include="ClassicSkin.cs" />
+    <Compile Include="Skin.cs" />
+    <Compile Include="CutString.cs" />
+    <Compile Include="VideoPlayer.cs" />
+    <Compile Include="Video.cs" />
+    <Compile Include="PlayingItem.cs" />
+    <Compile Include="GenericPlayer.cs" />
     <Compile Include="Playlist.cs" />
     <Compile Include="Song.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

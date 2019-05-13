@@ -15,20 +15,19 @@ namespace AudioPlayer
             int min;
             int max;
             int total = 0;
-            Skin skin = new RandomSkin();
-            var player = new Player(skin);
-            Random rand = new Random();
 
+            Random rand = new Random();
+            AudioPlayer player = new AudioPlayer(new ColorSkin(ConsoleColor.Red));
             List<Song> songs = new List<Song>();
             for (int i = 1; i < 8; i++)
             {
-                var song = CreateDefaultSong($"song {i}", 10+i*2, (Song.Genres)rand.Next(1,5));
-                songs.Add(song);
-               
+                var song = CreateDefaultSong($"song {i}", 10+i*2, (GenresSong)rand.Next(1,5));
+                AudioPlayer.Add(song);
+
             }
-            player.Add(songs.Shuffle());
-            player.Add(songs.SortByTitle());
-            //player.FilterByGenre(songs, Song.Genres.Post_Hardcore);
+            AudioPlayer.Items = AudioPlayer.Items.Shuffle();
+            Song.Dislike(AudioPlayer.Items[2]);
+            Song.Like(AudioPlayer.Items[0]);
 
             while (true)
             {
@@ -48,7 +47,7 @@ namespace AudioPlayer
 
                     case "P":
                         {
-                            player.Play(true);
+                            player.Play(AudioPlayer.Items, false);
                             break;
                         }
                     case "Stop":
@@ -113,31 +112,31 @@ namespace AudioPlayer
 
 
 
-        public static Song CreateDefaultSong()
-        {
-            var song = new Song();
-            song.Duration = 300;
-            song.Title = "song";
-            song.Path = "path";
-            song.Lyries = "lyries";
-            song.Genre = Song.Genres.Metall;
-            return song;
-        }
+        //public static Song CreateDefaultSong()
+        //{
+        //    var song = new Song();
+        //    song.Duration = 300;
+        //    song.Title = "song";
+        //    song.Path = "path";
+        //    song.Lyries = "lyries";
+        //    song.Genre = Song.Genres.Metall;
+        //    return song;
+        //}
 
-        public static Song CreateDefaultSong(string Name, bool like)
-        {
-            Random rand = new Random();
-            var song = new Song();
-            //CreateDefaultSong();
-            song.Title = Name;
-            song.Artist = new Artist();
-            song.like = like;
-            song.Duration = rand.Next(500);
-            song.Genre = Song.Genres.Metall;
-            return song;
-        }
+        //public static Song CreateDefaultSong(string Name, bool like)
+        //{
+        //    Random rand = new Random();
+        //    var song = new Song();
+        //    //CreateDefaultSong();
+        //    song.Title = Name;
+        //    song.Artist = new Artist();
+        //    song.like = like;
+        //    song.Duration = rand.Next(500);
+        //    song.Genre = Song.Genres.Metall;
+        //    return song;
+        //}
 
-        public static Song CreateDefaultSong(string name, int duration, Song.Genres genre)
+        public static Song CreateDefaultSong(string name, int duration, GenresSong genre)
         {
             var song = new Song();
             song.Title = name.TrimString();

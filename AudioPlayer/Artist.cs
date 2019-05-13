@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace AudioPlayer
 {
-    class Artist
+     class Artist
     {
         public Band[] Bands;
         public Song Song;
-        public string Name;
-        private string Nickname;
-        private string Country;
+        public string Name { get;set; }
+        private string Nickname { get; set; }
+        private string Country { get; set; }
         
         public Artist()
         {
-            this.Name = "unknown_artist";
+            Name = "unknown_artist";
         }
         public Artist(string name)
         {
-           
+            Name = name;
         }
     }
 }
