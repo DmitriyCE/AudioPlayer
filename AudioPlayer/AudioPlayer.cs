@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using TagLib;
 
 namespace AudioPlayer
 {
@@ -14,7 +16,7 @@ namespace AudioPlayer
         public override void ItemData(Song item, ConsoleColor color)
         {
 
-            var (title, minutes, seconds, artistName, album) = item;
+            var (title, minutes, seconds, artistName, album,year) = item;
             Skin.Render($"Title - {title.TrimString()}");
             Skin.Render($"Duration - {minutes}.{seconds}");
             Skin.Render($"Artist - {artistName}");
@@ -92,6 +94,46 @@ namespace AudioPlayer
                 }
             }
 
+        }
+        public static void Clear()
+        {
+           Items = new List<Song>();
+        }
+        public static void Load(string path)
+        {
+            var dirinfo = new DirectoryInfo(path);
+            var filemass = dirinfo.GetFiles();
+            for (int i = 0; i < filemass.Length; i++)
+            {
+                var audioFile = TagLib.File.Create(filemass[i].FullName);
+                string title = filemass[i].Name;
+                string nameArtist=null;
+                foreach (var item in audioFile.Tag.Artists)
+                {
+                    nameArtist += $" {item}";
+                }
+                nameArtist = nameArtist is null ? "NoArtist" : nameArtist;
+                int year =(int)audioFile.Tag.Year;
+                int duration = (int)audioFile.Properties.Duration.TotalMinutes;
+                string genre = audioFile.Tag.FirstGenre;
+                genre = genre is null ? "None" : genre;
+                string nameAlbum = audioFile.Tag.Album;
+                nameAlbum= nameAlbum is null ? "NoAlbum" : nameAlbum;
+                var song = CreateSong(title, nameArtist, duration, (GenresSong)Enum.Parse(typeof(GenresSong), genre), year, nameAlbum);
+                Add(song);
+            }
+
+        }
+        public static Song CreateSong(string title,string nameArtist,int duration, GenresSong genresSong,int year, string nameAlbum)
+        {
+            var song = new Song();
+            song.Title = title;
+            song.Artist= Program.AddArtist(nameArtist);
+            song.Duration = duration;
+            song.Genre = genresSong;
+            song.Album=Program.AddAlbum(year, nameAlbum);
+            song.Year = year;
+            return song;
         }
     }
 }

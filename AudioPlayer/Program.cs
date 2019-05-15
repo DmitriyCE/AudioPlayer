@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using static System.Console;
 
 namespace AudioPlayer
@@ -15,19 +16,21 @@ namespace AudioPlayer
             int min;
             int max;
             int total = 0;
-
             Random rand = new Random();
             AudioPlayer player = new AudioPlayer(new ColorSkin(ConsoleColor.Red));
-            List<Song> songs = new List<Song>();
-            for (int i = 1; i < 8; i++)
-            {
-                var song = CreateDefaultSong($"song {i}", 10+i*2, (GenresSong)rand.Next(1,5));
-                AudioPlayer.Add(song);
+            Console.WriteLine("Укажите путь к песням");
+            string path= Console.ReadLine();
 
-            }
-            AudioPlayer.Items = AudioPlayer.Items.Shuffle();
-            Song.Dislike(AudioPlayer.Items[2]);
-            Song.Like(AudioPlayer.Items[0]);
+            //List<Song> songs = new List<Song>();
+            //for (int i = 1; i < 8; i++)
+            //{
+            //    var song = CreateDefaultSong($"song {i}", 10+i*2, (GenresSong)rand.Next(1,5));
+            //    AudioPlayer.Add(song);
+            //}
+            AudioPlayer.Load(path);
+            //AudioPlayer.Items = AudioPlayer.Items.Shuffle();
+            //Song.Dislike(AudioPlayer.Items[2]);
+            //Song.Like(AudioPlayer.Items[0]);
 
             while (true)
             {
@@ -76,6 +79,16 @@ namespace AudioPlayer
                             WriteLine("Введите значение громкости");
                             int step = Convert.ToInt32(ReadLine());
                             player.VolumeChange(step);
+                            break;
+                        }
+                    case "Clear":
+                        {
+                            AudioPlayer.Clear();
+                            break;
+                        }
+                    case "LoadSong":
+                        {
+                            AudioPlayer.Load(path);
                             break;
                         }
                 }
@@ -136,22 +149,22 @@ namespace AudioPlayer
         //    return song;
         //}
 
-        public static Song CreateDefaultSong(string name, int duration, GenresSong genre)
-        {
-            var song = new Song();
-            song.Title = name.TrimString();
-            song.Duration = duration;
-            song.Path = "path";
-            song.Lyries = "lyries";
-            song.Genre = genre;
-            return song;
-        }
+        //public static Song CreateDefaultSong(string name, int duration, GenresSong genre)
+        //{
+        //    var song = new Song();
+        //    song.Title = name.TrimString();
+        //    song.Duration = duration;
+        //    song.Path = "path";
+        //    song.Lyries = "lyries";
+        //    song.Genre = genre;
+        //    return song;
+        //}
 
         public static Artist AddArtist(string name= "Unknown Artist")
         {
             var artist = new Artist();
             artist.Name = name;
-            WriteLine(artist.Name);
+            //WriteLine(artist.Name);
             return artist;
         }
 
@@ -160,7 +173,7 @@ namespace AudioPlayer
             var album = new Album();
             album.Name = name;
             album.Year = year;
-            WriteLine($"Album name:{album.Name}, album year: {album.Year}");
+            //WriteLine($"Album name:{album.Name}, album year: {album.Year}");
             return album;
         }
 
