@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace AudioPlayer
 {
-    class Song: PlayingItem<Song>
+    [Serializable]
+    public class Song: PlayingItem<Song>
     {
+        public Song() { }
         public Artist Artist;
         public Album Album { get; set; }
+        [NonSerialized]
         public string Lyries;
         public GenresSong Genre;
         public int Year { get; set; }

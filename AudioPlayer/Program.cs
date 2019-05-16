@@ -91,6 +91,16 @@ namespace AudioPlayer
                             AudioPlayer.Load(path);
                             break;
                         }
+                    case "SavePlaylist":
+                        {
+                            AudioPlayer.SaveAsPlaylist(AudioPlayer.Items);
+                            break;
+                        }
+                    case "LoadPlaylist":
+                        {
+                            AudioPlayer.LoadPlaylist();
+                            break;
+                        }
                 }
             }
         }
