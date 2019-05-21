@@ -36,7 +36,7 @@ namespace AudioPlayer
             }
         }
 
-        private bool Locked;
+        public bool Locked { get; set; }
         private bool _playing;
 
         public bool Playing

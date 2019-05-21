@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace AudioPlayer
 {
@@ -12,10 +13,11 @@ namespace AudioPlayer
         public Song() { }
         public Artist Artist;
         public Album Album { get; set; }
-        [NonSerialized]
+        [XmlIgnore]
         public string Lyries;
         public GenresSong Genre;
         public int Year { get; set; }
+        public string Path { get; set; }
 
         public void Deconstruct(out string title, out int minutes, out int seconds, out string artistName,
             out string album, out int year)

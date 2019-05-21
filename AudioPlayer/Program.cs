@@ -19,7 +19,7 @@ namespace AudioPlayer
             Random rand = new Random();
             AudioPlayer player = new AudioPlayer(new ColorSkin(ConsoleColor.Red));
             Console.WriteLine("Укажите путь к песням");
-            string path= Console.ReadLine();
+            string path = Console.ReadLine();
 
             //List<Song> songs = new List<Song>();
             //for (int i = 1; i < 8; i++)
@@ -91,16 +91,22 @@ namespace AudioPlayer
                             AudioPlayer.Load(path);
                             break;
                         }
-                    case "SavePlaylist":
+                    case "S":
                         {
                             AudioPlayer.SaveAsPlaylist(AudioPlayer.Items);
                             break;
                         }
-                    case "LoadPlaylist":
+                    case "Lo":
                         {
                             AudioPlayer.LoadPlaylist();
                             break;
                         }
+                    case "Esc":
+                        {
+                            player.Dispose();
+                            break;
+                        }
+
                 }
             }
         }
@@ -115,7 +121,7 @@ namespace AudioPlayer
             for (int i = 0; i < songs.Length; i++)
             {
                 var song1 = new Song();
-                song1.Title = "Song" + (i+1);
+                song1.Title = "Song" + (i + 1);
                 song1.Duration = rand.Next(501);
                 song1.Artist = new Artist();
                 songs[i] = song1;
@@ -124,8 +130,8 @@ namespace AudioPlayer
                     MinDuration = song1.Duration;
                 }
                 TotalDuration += song1.Duration;
-                MinDuration = song1.Duration < MinDuration? song1.Duration : MinDuration;
-                MaxDuration = song1.Duration > MaxDuration? song1.Duration : MaxDuration; 
+                MinDuration = song1.Duration < MinDuration ? song1.Duration : MinDuration;
+                MaxDuration = song1.Duration > MaxDuration ? song1.Duration : MaxDuration;
             }
             total = TotalDuration;
             min = MinDuration;
@@ -170,7 +176,7 @@ namespace AudioPlayer
         //    return song;
         //}
 
-        public static Artist AddArtist(string name= "Unknown Artist")
+        public static Artist AddArtist(string name = "Unknown Artist")
         {
             var artist = new Artist();
             artist.Name = name;
@@ -178,7 +184,7 @@ namespace AudioPlayer
             return artist;
         }
 
-        public static Album AddAlbum(int year=0, string name = "Unknown Album")
+        public static Album AddAlbum(int year = 0, string name = "Unknown Album")
         {
             var album = new Album();
             album.Name = name;

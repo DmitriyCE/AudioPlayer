@@ -6,11 +6,30 @@ using System.Threading.Tasks;
 using System.IO;
 using TagLib;
 using System.Xml.Serialization;
+using System.Media;
 
 namespace AudioPlayer
 {
-    class AudioPlayer : GenericPlayer<Song, GenresSong>
+    class AudioPlayer : GenericPlayer<Song, GenresSong>, IDisposable
     {
+        private bool disposed = false;
+        public void Dispose()
+        {
+
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if(!disposed)
+            {
+                if (disposing)
+                {
+                    soundPlayer.Dispose();
+                    soundPlayer = null;
+                }
+                disposed = true;
+            }
+        }
+        private SoundPlayer soundPlayer = new SoundPlayer();
         public AudioPlayer(Skin skin) : base(skin)
         {
         }
@@ -28,20 +47,14 @@ namespace AudioPlayer
         {
             foreach (Song song in items)
             {
-                if (loop)
-                {
-                    for (int i = 0; i < 2; i++)
-                    {
-                        song.Playing = true;
-                        ItemList(items);
-                    }
-                }
-                else
+                if (Locked != true && items.Count>0)
                 {
                     song.Playing = true;
-                    ItemList(items);
-                    song.Playing = false;
-                    System.Threading.Thread.Sleep(song.Duration + 2000);
+                }
+                if (song.Playing == true)
+                {
+                    soundPlayer.SoundLocation = song.Path;
+                    soundPlayer.PlaySync();
                 }
             }
         }
@@ -51,6 +64,8 @@ namespace AudioPlayer
             {
                 if (song.Playing)
                 {
+                    
+                    
                     ItemData(song, ConsoleColor.Blue);
                 }
                 else
@@ -59,14 +74,16 @@ namespace AudioPlayer
                     {
                         if (song.like == true)
                         {
-                            ItemData(song, ConsoleColor.Red);
+                            soundPlayer.PlaySync();
+                            //ItemData(song, ConsoleColor.Red);
                         }
                         else
                         {
-                            ItemData(song, ConsoleColor.Green);
+                            soundPlayer.PlaySync();
+                            //ItemData(song, ConsoleColor.Green);
                         }
                     }
-                    else ItemData(song, ConsoleColor.White);
+                    else soundPlayer.PlaySync();//ItemData(song, ConsoleColor.White);
                 }
             }
         }
@@ -122,6 +139,7 @@ namespace AudioPlayer
                 string nameAlbum = audioFile.Tag.Album;
                 nameAlbum = nameAlbum is null ? "NoAlbum" : nameAlbum;
                 var song = CreateSong(title, nameArtist, duration, (GenresSong)Enum.Parse(typeof(GenresSong), genre), year, nameAlbum);
+                song.Path = filemass[i].FullName;
                 Add(song);
             }
 
@@ -140,23 +158,21 @@ namespace AudioPlayer
         public static void SaveAsPlaylist(List<Song> songs)
         {
             XmlSerializer formatter = new XmlSerializer(songs.GetType());
-            foreach (var song in songs)
+            using (FileStream fs = new FileStream("myPlaylist.xml", FileMode.OpenOrCreate))
             {
-                using (FileStream fs = new FileStream("i:/CS/song/myPlaylist.xml", FileMode.OpenOrCreate))
-                {
-                    formatter.Serialize(fs, song);
-                }
+                formatter.Serialize(fs, songs);
             }
-            Console.WriteLine("песни сериализованы");
+        Console.WriteLine("песни сериализованы");
         }
         public static void LoadPlaylist()
         {
             Console.WriteLine("Укажите путь к сохраненному плэйлисту");
             string path = Console.ReadLine();
             XmlSerializer formatter = new XmlSerializer(typeof(Song[]));
-            using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream(path, FileMode.Open))
             {
-                Song[] songs = (Song[])formatter.Deserialize(fs);
+                List<Song> songs = (List<Song>)formatter.Deserialize(fs);
+                
                 foreach (var song in songs)
                 {
                     Add(song);
@@ -165,5 +181,9 @@ namespace AudioPlayer
             Console.WriteLine("песни десериализованы");
 
         }
-    }
+        ~AudioPlayer()
+        {
+            Dispose(false);
+        }
+}
 }
