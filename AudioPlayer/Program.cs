@@ -16,6 +16,7 @@ namespace AudioPlayer
             int min;
             int max;
             int total = 0;
+            Skin skin = new ColorSkin(ConsoleColor.Red);
             Random rand = new Random();
             AudioPlayer player = new AudioPlayer(new ColorSkin(ConsoleColor.Red));
             Console.WriteLine("Укажите путь к песням");
@@ -27,11 +28,17 @@ namespace AudioPlayer
             //    var song = CreateDefaultSong($"song {i}", 10+i*2, (GenresSong)rand.Next(1,5));
             //    AudioPlayer.Add(song);
             //}
-            AudioPlayer.Load(path);
+            player.Load(path);
             //AudioPlayer.Items = AudioPlayer.Items.Shuffle();
             //Song.Dislike(AudioPlayer.Items[2]);
             //Song.Like(AudioPlayer.Items[0]);
-
+            player.PlayerStartedEvent+= (player1, e) => { skin.Render(e.Message); };
+            player.PlayerStoppedEvent += (player1, e) => { skin.Render(e.Message); };
+            player.PlayerLockedEvent += (player1, e) => { skin.Render(e.Message); };
+            player.PlayerUnLockedEvent += (player1, e) => { skin.Render(e.Message); };
+            player.SongsListChangedEvent += (player1, e) => { skin.Render(e.Message); };
+            player.SongStartedEvent += (player1, e) => { skin.Render(e.Message); };
+            player.VolumeChangedEvent += (player1, e) => { skin.Render(e.Message); };
             while (true)
             {
                 switch (ReadLine())
@@ -56,11 +63,6 @@ namespace AudioPlayer
                     case "Stop":
                         {
                             player.Stop();
-                            break;
-                        }
-                    case "Start":
-                        {
-                            player.Start();
                             break;
                         }
 
@@ -88,7 +90,7 @@ namespace AudioPlayer
                         }
                     case "LoadSong":
                         {
-                            AudioPlayer.Load(path);
+                            player.Load(path);
                             break;
                         }
                     case "S":

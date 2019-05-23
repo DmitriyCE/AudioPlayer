@@ -10,7 +10,7 @@ using System.Media;
 
 namespace AudioPlayer
 {
-    class AudioPlayer : GenericPlayer<Song, GenresSong>, IDisposable
+    public class AudioPlayer : GenericPlayer<Song, GenresSong>, IDisposable
     {
         private bool disposed = false;
         public void Dispose()
@@ -29,6 +29,11 @@ namespace AudioPlayer
                 disposed = true;
             }
         }
+
+        public event PlayerMessageHandler PlayerStartedEvent;
+        public event PlayerMessageHandler SongStartedEvent;
+        public event PlayerMessageHandler SongsListChangedEvent;
+
         private SoundPlayer soundPlayer = new SoundPlayer();
         public AudioPlayer(Skin skin) : base(skin)
         {
@@ -45,6 +50,7 @@ namespace AudioPlayer
         }
         public override void Play(List<Song> items, bool loop)
         {
+            PlayerStartedEvent(this, new PlayerEventsArgs() { Message = "PlayerStarted" });
             foreach (Song song in items)
             {
                 if (Locked != true && items.Count>0)
@@ -53,8 +59,9 @@ namespace AudioPlayer
                 }
                 if (song.Playing == true)
                 {
+                    SongStartedEvent(this, new PlayerEventsArgs() { Message = $"Сейчас играет {song.Title}" });
                     soundPlayer.SoundLocation = song.Path;
-                    soundPlayer.PlaySync();
+                    soundPlayer.PlaySync(); 
                 }
             }
         }
@@ -64,8 +71,8 @@ namespace AudioPlayer
             {
                 if (song.Playing)
                 {
-                    
-                    
+
+
                     ItemData(song, ConsoleColor.Blue);
                 }
                 else
@@ -118,8 +125,9 @@ namespace AudioPlayer
             Items = new List<Song>();
             Console.WriteLine("Список очищен");
         }
-        public static void Load(string path)
+        public void Load(string path)
         {
+            
             var dirinfo = new DirectoryInfo(path);
             var filemass = dirinfo.GetFiles();
             for (int i = 0; i < filemass.Length; i++)
@@ -141,7 +149,10 @@ namespace AudioPlayer
                 var song = CreateSong(title, nameArtist, duration, (GenresSong)Enum.Parse(typeof(GenresSong), genre), year, nameAlbum);
                 song.Path = filemass[i].FullName;
                 Add(song);
+                SongsListChangedEvent?.Invoke(this, new PlayerEventsArgs() { Message = "SongsListChanged" });
             }
+            
+
 
         }
         public static Song CreateSong(string title, string nameArtist, int duration, GenresSong genresSong, int year, string nameAlbum)

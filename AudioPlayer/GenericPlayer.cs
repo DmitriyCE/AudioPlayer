@@ -9,6 +9,11 @@ namespace AudioPlayer
 {
     public abstract class GenericPlayer<T,TGenre>
     {
+        public delegate void PlayerMessageHandler(GenericPlayer<T, TGenre> player, PlayerEventsArgs args);
+        public event PlayerMessageHandler VolumeChangedEvent;
+        public event PlayerMessageHandler PlayerLockedEvent;
+        public event PlayerMessageHandler PlayerUnLockedEvent;
+        public event PlayerMessageHandler PlayerStoppedEvent;
         public Skin Skin { get; set; }
         public static List<T> Items { get; set; } = new List<T>();
         private const int _maxVolume = 300;
@@ -62,30 +67,30 @@ namespace AudioPlayer
         public void VolumeUp()
         {
             Volume += 5;
-            Console.WriteLine("Volume is: " + Volume);
+            VolumeChangedEvent(this, new PlayerEventsArgs() { Message = "Volume is: " + Volume });
         }
         public void VolumeDown()
         {
             Volume -= 5;
-            Console.WriteLine("Volume is: " + Volume);
+            VolumeChangedEvent(this, new PlayerEventsArgs() { Message = "Volume is: " + Volume});
         }
 
         public void VolumeChange(int step)
         {
             Volume = step;
-            Console.WriteLine("Volume is: " + Volume);
+            VolumeChangedEvent(this, new PlayerEventsArgs() { Message = "Volume is: " + Volume });
         }
 
         public void Lock()
         {
             Locked = true;
-            Console.WriteLine("Плеер заблокирован");
+            PlayerLockedEvent(this, new PlayerEventsArgs() { Message = "Player locked" });
         }
 
         public void UnLock()
         {
             Locked = false;
-            Console.WriteLine("Плеер разблокирован");
+            PlayerUnLockedEvent(this, new PlayerEventsArgs() { Message = "Player unlocked" });
         }
 
         public bool Stop()
@@ -93,17 +98,7 @@ namespace AudioPlayer
             if (Locked == false)
             {
                 Playing = false;
-                Console.WriteLine("Плеер остановлен");
-            }
-            return Playing;
-        }
-
-        public bool Start()
-        {
-            if (Locked == false)
-            {
-                Playing = true;
-                Console.WriteLine("Плеер запущен");
+                PlayerStoppedEvent(this, new PlayerEventsArgs() { Message = "Player stopped" });
             }
             return Playing;
         }

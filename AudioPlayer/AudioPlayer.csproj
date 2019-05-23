@@ -56,6 +56,7 @@
     <Compile Include="Album.cs" />
     <Compile Include="Band.cs" />
     <Compile Include="AudioPlayer.cs" />
+    <Compile Include="PlayerEventsArgs.cs" />
     <Compile Include="Sorted.cs" />
     <Compile Include="ShuffleSong.cs" />
     <Compile Include="RandomSkin.cs" />
