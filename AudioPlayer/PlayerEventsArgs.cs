@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace AudioPlayer
 {
-    class Playlist
+    public class PlayerEventsArgs:EventArgs
     {
-        private string Path;
-        private string Title;
-        public Song[] Songs;
-
+        public string Message { get; set; }
     }
 }

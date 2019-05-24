@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace AudioPlayer
 {
-    class Playlist
+    public abstract class Skin
     {
-        private string Path;
-        private string Title;
-        public Song[] Songs;
-
+        public abstract void Clear();
+        public abstract void Render(string text);
     }
 }

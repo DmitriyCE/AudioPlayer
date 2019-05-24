@@ -1,33 +1,44 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using static System.Console;
 
 namespace AudioPlayer
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            var song1 = new Song();
-            song1.Title = "Дым сигарет с ментолом";
-            song1.Duration = 300;
-            song1.Artist = new Artist
-            {
-                Name = "Нэнси"
-            };
-            var song2 = new Song();
-            song2.Title = "Anaconda";
-            song2.Duration = 270;
-            song2.Artist = new Artist
-            {
-                Name = "Nicki Minaj"
-            };
-            var player = new Player();
-            player.Songs = new[] { song1, song2 };
+            int min;
+            int max;
+            int total = 0;
+            Skin skin = new ColorSkin(ConsoleColor.Red);
+            Random rand = new Random();
+            AudioPlayer player = new AudioPlayer(new ColorSkin(ConsoleColor.Red));
+            Console.WriteLine("Укажите путь к песням");
+            string path = Console.ReadLine();
 
+            //List<Song> songs = new List<Song>();
+            //for (int i = 1; i < 8; i++)
+            //{
+            //    var song = CreateDefaultSong($"song {i}", 10+i*2, (GenresSong)rand.Next(1,5));
+            //    AudioPlayer.Add(song);
+            //}
+            player.Load(path);
+            //AudioPlayer.Items = AudioPlayer.Items.Shuffle();
+            //Song.Dislike(AudioPlayer.Items[2]);
+            //Song.Like(AudioPlayer.Items[0]);
+            player.PlayerStartedEvent+= (player1, e) => { skin.Render(e.Message); };
+            player.PlayerStoppedEvent += (player1, e) => { skin.Render(e.Message); };
+            player.PlayerLockedEvent += (player1, e) => { skin.Render(e.Message); };
+            player.PlayerUnLockedEvent += (player1, e) => { skin.Render(e.Message); };
+            player.SongsListChangedEvent += (player1, e) => { skin.Render(e.Message); };
+            player.SongStartedEvent += (player1, e) => { skin.Render(e.Message); };
+            player.VolumeChangedEvent += (player1, e) => { skin.Render(e.Message); };
             while (true)
             {
                 switch (ReadLine())
@@ -35,19 +46,156 @@ namespace AudioPlayer
                     case "Up":
                         {
                             player.VolumeUp();
-                        }break;
+                        }
+                        break;
 
                     case "Down":
                         {
                             player.VolumeDown();
-                        }break;
+                        }
+                        break;
 
                     case "P":
                         {
-                            player.Play();
-                        }break;
+                            player.Play(AudioPlayer.Items, false);
+                            break;
+                        }
+                    case "Stop":
+                        {
+                            player.Stop();
+                            break;
+                        }
+
+                    case "L":
+                        {
+                            player.Lock();
+                            break;
+                        }
+                    case "UnL":
+                        {
+                            player.UnLock();
+                            break;
+                        }
+                    case "VolChang":
+                        {
+                            WriteLine("Введите значение громкости");
+                            int step = Convert.ToInt32(ReadLine());
+                            player.VolumeChange(step);
+                            break;
+                        }
+                    case "Clear":
+                        {
+                            AudioPlayer.Clear();
+                            break;
+                        }
+                    case "LoadSong":
+                        {
+                            player.Load(path);
+                            break;
+                        }
+                    case "S":
+                        {
+                            AudioPlayer.SaveAsPlaylist(AudioPlayer.Items);
+                            break;
+                        }
+                    case "Lo":
+                        {
+                            AudioPlayer.LoadPlaylist();
+                            break;
+                        }
+                    case "Esc":
+                        {
+                            player.Dispose();
+                            break;
+                        }
+
                 }
             }
         }
+
+        private static Song[] CreateSongs(out int min, out int max, ref int total)
+        {
+            Random rand = new Random();
+            Song[] songs = new Song[5];
+            int MinDuration = 0;
+            int MaxDuration = 0;
+            int TotalDuration = 0;
+            for (int i = 0; i < songs.Length; i++)
+            {
+                var song1 = new Song();
+                song1.Title = "Song" + (i + 1);
+                song1.Duration = rand.Next(501);
+                song1.Artist = new Artist();
+                songs[i] = song1;
+                if (i == 0)
+                {
+                    MinDuration = song1.Duration;
+                }
+                TotalDuration += song1.Duration;
+                MinDuration = song1.Duration < MinDuration ? song1.Duration : MinDuration;
+                MaxDuration = song1.Duration > MaxDuration ? song1.Duration : MaxDuration;
+            }
+            total = TotalDuration;
+            min = MinDuration;
+            max = MaxDuration;
+            return songs;
+        }
+
+
+
+        //public static Song CreateDefaultSong()
+        //{
+        //    var song = new Song();
+        //    song.Duration = 300;
+        //    song.Title = "song";
+        //    song.Path = "path";
+        //    song.Lyries = "lyries";
+        //    song.Genre = Song.Genres.Metall;
+        //    return song;
+        //}
+
+        //public static Song CreateDefaultSong(string Name, bool like)
+        //{
+        //    Random rand = new Random();
+        //    var song = new Song();
+        //    //CreateDefaultSong();
+        //    song.Title = Name;
+        //    song.Artist = new Artist();
+        //    song.like = like;
+        //    song.Duration = rand.Next(500);
+        //    song.Genre = Song.Genres.Metall;
+        //    return song;
+        //}
+
+        //public static Song CreateDefaultSong(string name, int duration, GenresSong genre)
+        //{
+        //    var song = new Song();
+        //    song.Title = name.TrimString();
+        //    song.Duration = duration;
+        //    song.Path = "path";
+        //    song.Lyries = "lyries";
+        //    song.Genre = genre;
+        //    return song;
+        //}
+
+        public static Artist AddArtist(string name = "Unknown Artist")
+        {
+            var artist = new Artist();
+            artist.Name = name;
+            //WriteLine(artist.Name);
+            return artist;
+        }
+
+        public static Album AddAlbum(int year = 0, string name = "Unknown Album")
+        {
+            var album = new Album();
+            album.Name = name;
+            album.Year = year;
+            //WriteLine($"Album name:{album.Name}, album year: {album.Year}");
+            return album;
+        }
+
     }
+
 }
+
