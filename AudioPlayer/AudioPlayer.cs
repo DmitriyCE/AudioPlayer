@@ -15,6 +15,8 @@ namespace AudioPlayer
         private bool disposed = false;
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
 
         }
         protected virtual void Dispose(bool disposing)
@@ -23,9 +25,10 @@ namespace AudioPlayer
             {
                 if (disposing)
                 {
-                    soundPlayer.Dispose();
-                    soundPlayer = null;
+                    Items = null; 
                 }
+                soundPlayer.Dispose();
+                soundPlayer = null;
                 disposed = true;
             }
         }
